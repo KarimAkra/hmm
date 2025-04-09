@@ -94,7 +94,12 @@ class Shell {
   }
 
   public static function haxelibGit(name : String, url : String, ref : Option<String>, dir : Option<String>, options: ShellOptions) : Void {
-    var args = ["git", name, url].concat(ref.toArray()).concat(dir.toArray());
+    var args = ["git", name, url, "--skip-dependencies"];
+    if (ref != null) {
+      args = args.concat(ref.toArray());
+    }
+    args = args.concat(dir.toArray());
+
     return haxelib(args, options);
   }
 
@@ -141,6 +146,19 @@ class Shell {
     throw new SystemError('failed to extract expected "haxelib path $libraryName" information (path, name, and version) for library: $libraryName', 1);
   }
 
+  public static function gitCheckout(name:String, ref:Option<String>, fetch:Bool = true, options:ShellOptions):Void {
+   var mainCWD:String = Sys.getCwd();
+   setCwd(haxelibPath(name, {log: false, throwError: true}).path, {log: false});
+    
+   if (fetch)
+   {
+      git(["fetch"], {log: false, throwError: true});
+   }
+
+   git(["checkout"].concat(ref.toArray()), options);
+   setCwd(mainCWD, {log: false});
+  }
+
   public static function haxelib(args : Array<String>, options: ShellOptions) : Void {
     // Always pass the --never option to haxelib, to answer no to all questions
     var commandArgs = ["--never"].concat(args);
@@ -148,6 +166,10 @@ class Shell {
       commandArgs.push("--quiet");
     }
     runCommand("haxelib", commandArgs, options);
+  }
+
+  public static function git(args:Array<String>, options:ShellOptions) : Void {
+    runCommand("git", args, options);
   }
 
   public static function isAlreadyInstalled(library : LibraryConfig, options: ShellOptions) : Bool {
