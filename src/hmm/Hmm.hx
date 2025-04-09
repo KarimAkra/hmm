@@ -17,7 +17,7 @@ class Hmm {
       commands = [
         new HelpCommand(), new VersionCommand(), new SetupCommand(), new InitCommand(), new FromHxmlCommand(), new ToHxmlCommand(), new InstallCommand(),
         new ReinstallCommand(), new HaxelibCommand(), new GitCommand(), new HgCommand(), new DevCommand(), new UpdateCommand(), new RemoveCommand(),
-        new LockVersionCommand(), new CheckCommand(), new CleanCommand(), new HmmUpdateCommand(), new HmmRemoveCommand(),
+        new LockVersionCommand(), new CheckCommand(), new CleanCommand(), new HmmUpdateCommand(), new HmmRemoveCommand(), new SyncCommand(),
       ];
 
       var args = Sys.args().copy();
